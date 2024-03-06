@@ -1,33 +1,44 @@
 ﻿namespace Task1
 {
-    public interface User
+    public interface IDisplayable
     {
         void Show();
     }
 
-    public interface Net
+    public interface IOrganization
     {
-        void Connect();
+        string Name { get; }
+        string Address { get; }
     }
 
-    public abstract class Organization : User
+    public interface IComparable
     {
-        protected string name;
-        protected string address;
+        int CompareTo(object obj);
+    }
+
+    public interface ICloneable
+    {
+        object Clone();
+    }
+
+    public class Organization : IOrganization, IDisplayable
+    {
+        public string Name { get; protected set; }
+        public string Address { get; protected set; }
 
         public Organization(string name, string address)
         {
-            this.name = name;
-            this.address = address;
+            Name = name;
+            Address = address;
         }
 
         public virtual void Show()
         {
-            Console.WriteLine($"Organization: \t\t{name} \nAddress: \t\t{address}");
+            Console.WriteLine($"Organization: \t\t{Name} \nAddress: \t\t{Address}");
         }
     }
 
-    public class InsuranceCompany : Organization, User
+    public class InsuranceCompany : Organization, IDisplayable
     {
         protected string insuranceType;
 
@@ -43,7 +54,7 @@
         }
     }
 
-    public class OilCompany : Organization, User
+    public class OilCompany : Organization, IDisplayable
     {
         protected string specialization;
 
@@ -59,7 +70,7 @@
         }
     }
 
-    public class Factory : Organization, User, Net
+    public class Factory : Organization, IDisplayable
     {
         protected string productType;
 
@@ -73,18 +84,13 @@
             base.Show();
             Console.WriteLine($"Type of product: \t{productType}");
         }
-
-        public void Connect()
-        {
-            Console.WriteLine("Factory connected to the network");
-        }
     }
 
     class Program
     {
         public static void Main_Task1()
         {
-            User[] organizations = new User[]
+            IDisplayable[] organizations = new IDisplayable[]
             {
                 new InsuranceCompany("Страхова Компанiя 1", "Адреса 1", "Автострахування"),
                 new OilCompany("Нафтогазова Компанiя 1", "Адреса 2", "Видобуток нафти та газу"),
@@ -94,7 +100,7 @@
             };
 
             Console.WriteLine("\nArray of organizations: \n");
-            foreach (Organization org in organizations)
+            foreach (IDisplayable org in organizations)
             {
                 org.Show();
                 Console.WriteLine();
